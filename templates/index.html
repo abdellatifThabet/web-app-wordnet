@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html >
+<!--From https://codepen.io/frytyler/pen/EGdtg-->
+<head>
+  <meta charset="UTF-8">
+  <title>ML API</title>
+  <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Arimo' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Hind:300' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<style>
+  body {
+    background: rgb(42, 42, 44);
+    
+  }
+  a:link {
+  color: rgb(239, 243, 239);
+  background-color: transparent;
+  text-decoration: none;
+}
+
+
+
+</style>
+</head>
+
+<body>
+ <div class="login">
+	<h1>Search wordnet terms</h1>
+
+     <!-- Main Input For Receiving Query to our ML -->
+    <form action="{{ url_for('predict')}}"method="post">
+    	  <input type="text" name="word" placeholder="Type a word" required="required" />
+        <button type="submit" class="btn btn-primary btn-block btn-large">Search</button>
+    </form>
+
+   <br>
+   <br>
+    <div>
+      {%if text%}
+      <h4>Searching for : {{ text }}</h4>
+      {%endif%}
+    </div>
+    {%if infos =='None'%}
+    <div>
+    <h4>None</h4>
+    </div>
+    {%else%}
+
+
+    
+    <div>
+      {% for info in infos %}
+
+        <h5>( {{info['pos']}} )
+        {%for wd in info['definition'].split(' ') %}
+        <a href="{{url_for('predict', type=wd)}}">{{wd}}</a>
+        {%endfor%}
+        </h5>
+
+        <h5>
+          {% if info['examples'] %}
+            {% for exp in info['examples'] %}
+              (exp)-
+              {%for wx in exp.split(' ') %}
+                <a href="{{url_for('predict', type=wx)}}">{{wx}}</a>
+              {% endfor %} 
+            {% endfor %}    
+          {% endif %}  
+        </h5>
+
+      {% endfor %}
+    </div>
+
+
+
+
+    {%endif%}
+    
+ </div>
+
+<!--  <li><a href="{{url_for('predict', type=text)}}">{{text}}</a></li>
+ -->
+
+
+<!--  <div>
+  {% for info in infos %}
+    <h5>( {{info['pos']}} )
+    {{info['definition']}}</h5>
+    <h5>
+      {% if info['examples'] %}
+        {% for exp in info['examples'] %}
+          (exp)-{{exp}}
+        {% endfor %}    
+      {% endif %}  
+    </h5>
+    {% endfor %}
+</div> -->
